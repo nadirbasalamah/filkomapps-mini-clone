@@ -1,6 +1,5 @@
 const Student = require("../models/Student");
 const Proposal = require("../models/Proposal");
-const Response = require("../utils/util");
 
 exports.UploadProposal = async (obj) => {
   try {
@@ -14,6 +13,23 @@ exports.UploadProposal = async (obj) => {
     });
     const addedProposal = await proposal.save();
     obj.response.json(addedProposal);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.GetProposal = async (obj) => {
+  try {
+    const proposal = Proposal.findOne({ student: obj.studentId });
+    if (!proposal) {
+      const errResponse = {
+        response: obj.response,
+        code: 404,
+        error: { errors: [{ msg: "Proposal not found" }] },
+      };
+      return Response.errorResponse(errResponse);
+    }
+    return proposal;
   } catch (error) {
     console.log(error);
   }

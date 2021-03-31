@@ -43,3 +43,18 @@ exports.UploadProposal = async (req, res) => {
     Response.serverErrResponse(serverErr);
   }
 };
+
+exports.GetProposal = async (req, res) => {
+  try {
+    const obj = {
+      response: res,
+      studentId: req.user.id,
+    };
+    const proposal = await StudentService.GetProposal(obj);
+    res.json(proposal);
+  } catch (error) {
+    console.error(error.message);
+    const serverErr = { response: res, code: 500, error: "server error" };
+    Response.serverErrResponse(serverErr);
+  }
+};

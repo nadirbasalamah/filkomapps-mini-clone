@@ -1,27 +1,21 @@
 const express = require("express");
 const path = require("path");
-const connectDB = require("./config/db");
 const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
+
+const connectDB = require("./config/db");
+const util = require("./utils/util");
 
 const app = express();
 
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "files");
-  },
-  filename: (req, file, cb) => {
-    cb(null, uuidv4() + file.originalname);
-  },
-});
+const fileStorage = util.createFileStorage("files");
 
-// const fileFilter = (req, file, cb) => {
-//   if (file.mimetype === "document/pdf") {
-//     cb(null, true);
-//   } else {
-//     cb(null, false);
-//   }
-// };
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "application/pdf") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 connectDB();
 
@@ -31,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   multer({
     storage: fileStorage,
-    // fileFilter: fileFilter,
+    fileFilter: fileFilter,
   }).single("file")
 );
 app.use("/files", express.static(path.join(__dirname, "files")));

@@ -22,9 +22,7 @@ router.post(
 // @router  GET api/students/proposal
 // @desc    Get proposal's data
 // @access  Private
-router.get("/proposal", () => {
-  return "proposal's data";
-});
+router.get("/proposal", auth, StudentController.GetProposal);
 
 // @router  GET api/students/report
 // @desc    Get report's data
