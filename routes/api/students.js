@@ -1,15 +1,23 @@
 const express = require("express");
-// const { check } = require("express-validator");
+const { check } = require("express-validator");
 const router = express.Router();
+const auth = require("../../middleware/auth");
 
-// const StudentController = require("../../controllers/students");
+const StudentController = require("../../controllers/students");
 
 // @router  POST api/students/proposal
 // @desc    Upload a new proposal
 // @access  Private
-router.post("/proposal", () => {
-  return "Upload proposal";
-});
+router.post(
+  "/proposal",
+  [
+    auth,
+    check("title", "title is required").not().isEmpty(),
+    check("background", "background is required").not().isEmpty(),
+    check("research_question", "research question is required").not().isEmpty(),
+  ],
+  StudentController.UploadProposal
+);
 
 // @router  GET api/students/proposal
 // @desc    Get proposal's data
