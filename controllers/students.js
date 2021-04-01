@@ -121,3 +121,35 @@ exports.GetReport = async (req, res) => {
     Response.serverErrResponse(serverErr);
   }
 };
+
+exports.Registration = async (req, res) => {
+  try {
+    // if (!req.file) {
+    //   const errResponse = {
+    //     response: res,
+    //     code: 422,
+    //     error: "File is required",
+    //   };
+    //   return Response.errorResponse(errResponse);
+    // }
+
+    // const reportUrl = req.file.path.replace("\\", "/");
+    // const journalUrl = req.file.path.replace("\\", "/");
+    // const transcriptUrl = req.file.path.replace("\\", "/");
+
+    // const obj = {
+    //   studentId: req.user.id,
+    //   report: reportUrl,
+    //   journal: journalUrl,
+    //   transcript: transcriptUrl,
+    //   response: res,
+    // };
+    // await StudentService.Registration(obj);
+
+    res.send("registration not implemented yet.");
+  } catch (error) {
+    console.error(error.message);
+    const serverErr = { response: res, code: 500, error: "server error" };
+    Response.serverErrResponse(serverErr);
+  }
+};

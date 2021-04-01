@@ -47,8 +47,6 @@ router.get("/report", auth, StudentController.GetReport);
 // @router  POST api/students/registration
 // @desc    Upload some documents for final assignment registration
 // @access  Private
-router.post("/registration", () => {
-  return "Registration for final part";
-});
+router.post("/registration", auth, StudentController.Registration);
 
 module.exports = router;

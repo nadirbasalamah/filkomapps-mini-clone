@@ -28,6 +28,7 @@ app.use(
     fileFilter: fileFilter,
   }).single("file")
 );
+
 app.use("/files", express.static(path.join(__dirname, "files")));
 
 app.use("/api/users", require("./routes/api/users"));
