@@ -24,19 +24,25 @@ router.post(
 // @access  Private
 router.get("/proposal", auth, StudentController.GetProposal);
 
-// @router  GET api/students/report
-// @desc    Get report's data
-// @access  Private
-router.get("/report", () => {
-  return "report's data";
-});
-
 // @router  POST api/students/report
 // @desc    Upload a new report
 // @access  Private
-router.post("/report", () => {
-  return "Upload report";
-});
+router.post(
+  "/report",
+  [
+    auth,
+    check("title", "title is required").not().isEmpty(),
+    check("abstract", "abstract is required").not().isEmpty(),
+    check("background", "background is required").not().isEmpty(),
+    check("research_question", "research question is required").not().isEmpty(),
+  ],
+  StudentController.UploadReport
+);
+
+// @router  GET api/students/report
+// @desc    Get report's data
+// @access  Private
+router.get("/report", auth, StudentController.GetReport);
 
 // @router  POST api/students/registration
 // @desc    Upload some documents for final assignment registration

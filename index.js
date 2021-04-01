@@ -3,11 +3,11 @@ const path = require("path");
 const multer = require("multer");
 
 const connectDB = require("./config/db");
-const util = require("./utils/util");
+const Util = require("./utils/util");
 
 const app = express();
 
-const fileStorage = util.createFileStorage("files");
+const fileStorage = Util.createFileStorage("files");
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {

@@ -9,6 +9,7 @@ const ProposalSchema = new mongoose.Schema({
   lecturer: {
     type: Schema.Types.ObjectId,
     ref: "lecturer",
+    unique: false,
   },
   title: {
     type: String,
