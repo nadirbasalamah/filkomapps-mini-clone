@@ -1,8 +1,27 @@
 const Proposal = require("../models/Proposal");
 const Report = require("../models/Report");
 const Student = require("../models/Student");
+const Lecturer = require("../models/Lecturer");
+const Document = require("../models/Document");
 
 const Util = require("../utils/util");
+
+exports.GetLecturer = async (obj) => {
+  try {
+    const lecturer = await Lecturer.findById(obj.lecturerId);
+    if (!lecturer) {
+      const errResponse = {
+        response: obj.response,
+        code: 404,
+        error: { errors: [{ msg: "Lecturer not found" }] },
+      };
+      return Util.errorResponse(errResponse);
+    }
+    return lecturer;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 exports.VerifyProposal = async (obj) => {
   try {
@@ -90,6 +109,42 @@ exports.ChangeStatus = async (obj) => {
     student.status = obj.status;
     await student.save();
     obj.response.json(student);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.VerifyDocument = async (obj) => {
+  try {
+    const document = await Document.findById(obj.documentId);
+    if (!document) {
+      const errResponse = {
+        response: obj.response,
+        code: 404,
+        error: { errors: [{ msg: "Document not found" }] },
+      };
+      return Util.errorResponse(errResponse);
+    }
+    document.status = obj.status;
+    await document.save();
+    obj.response.json(document);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.GetDocument = async (obj) => {
+  try {
+    const document = await Document.find({ student: obj.studentId });
+    if (!document) {
+      const errResponse = {
+        response: obj.response,
+        code: 404,
+        error: { errors: [{ msg: "Document not found" }] },
+      };
+      return Util.errorResponse(errResponse);
+    }
+    return document;
   } catch (error) {
     console.log(error);
   }

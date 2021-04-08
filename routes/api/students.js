@@ -6,6 +6,12 @@ const uploadUtil = require("../../utils/upload");
 
 const StudentController = require("../../controllers/students");
 
+// @router GET api/students/
+// @desc Get student's data
+// @access Private
+
+router.get("/", auth, StudentController.GetStudent);
+
 // @router  POST api/students/proposal
 // @desc    Upload a new proposal
 // @access  Private

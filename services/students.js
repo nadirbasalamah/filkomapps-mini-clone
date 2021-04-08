@@ -1,7 +1,25 @@
 const Proposal = require("../models/Proposal");
 const Report = require("../models/Report");
 const Document = require("../models/Document");
+const Student = require("../models/Student");
 const Util = require("../utils/util");
+
+exports.GetStudent = async (obj) => {
+  try {
+    const student = await Student.findById(obj.studentId);
+    if (!student) {
+      const errResponse = {
+        response: obj.response,
+        code: 404,
+        error: { errors: [{ msg: "Student not found" }] },
+      };
+      return Util.errorResponse(errResponse);
+    }
+    return student;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 exports.UploadProposal = async (obj) => {
   try {
@@ -13,6 +31,7 @@ exports.UploadProposal = async (obj) => {
       proposal.background = obj.background;
       proposal.research_question = obj.research_question;
       proposal.file = obj.file;
+      proposal.status = "";
 
       await proposal.save();
       obj.response.json(proposal);
@@ -60,6 +79,7 @@ exports.UploadReport = async (obj) => {
       report.background = obj.background;
       report.research_question = obj.research_question;
       report.file = obj.file;
+      report.status = "";
 
       await report.save();
       obj.response.json(report);
@@ -113,18 +133,20 @@ exports.Registration = async (obj) => {
       document.report = obj.report;
       document.journal = obj.journal;
       document.transcript = obj.transcript;
+      document.status = "";
 
       await document.save();
       obj.response.json(document);
+    } else {
+      const newDocument = new Document({
+        student: obj.studentId,
+        report: obj.report,
+        journal: obj.journal,
+        transcript: obj.transcript,
+      });
+      const addedDocument = await newDocument.save();
+      obj.response.json(addedDocument);
     }
-    const newDocument = new Document({
-      student: obj.studentId,
-      report: obj.report,
-      journal: obj.journal,
-      transcript: obj.transcript,
-    });
-    const addedDocument = await newDocument.save();
-    obj.response.json(addedDocument);
   } catch (error) {
     console.log(error);
   }

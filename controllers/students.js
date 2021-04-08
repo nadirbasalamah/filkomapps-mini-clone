@@ -3,6 +3,21 @@ const { validationResult } = require("express-validator");
 const Response = require("../utils/util");
 const StudentService = require("../services/students");
 
+exports.GetStudent = async (req, res) => {
+  try {
+    const obj = {
+      response: res,
+      studentId: req.user.id,
+    };
+    const student = await StudentService.GetStudent(obj);
+    res.json(student);
+  } catch (error) {
+    console.error(error.message);
+    const serverErr = { response: res, code: 500, error: "server error" };
+    Response.serverErrResponse(serverErr);
+  }
+};
+
 exports.UploadProposal = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
