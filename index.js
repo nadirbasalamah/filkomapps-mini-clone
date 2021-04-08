@@ -1,35 +1,17 @@
 const express = require("express");
 const path = require("path");
-const multer = require("multer");
 
 const connectDB = require("./config/db");
-const Util = require("./utils/util");
 
 const app = express();
-
-const fileStorage = Util.createFileStorage("files");
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
 
 connectDB();
 
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 
-app.use(
-  multer({
-    storage: fileStorage,
-    fileFilter: fileFilter,
-  }).single("file")
-);
-
 app.use("/files", express.static(path.join(__dirname, "files")));
+app.use("/documents", express.static(path.join(__dirname, "documents")));
 
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/students", require("./routes/api/students"));

@@ -1,6 +1,6 @@
 const Proposal = require("../models/Proposal");
 const Report = require("../models/Report");
-// const Document = require("../models/Document");
+const Document = require("../models/Document");
 const Util = require("../utils/util");
 
 exports.UploadProposal = async (obj) => {
@@ -97,38 +97,38 @@ exports.GetReport = async (obj) => {
   }
 };
 
-// exports.Registration = async (obj) => {
-//   try {
-//     const document = await getDocument(obj.studentId);
-//     if (document) {
-//       const documents = [
-//         document.report,
-//         document.journal,
-//         document.transcript,
-//       ];
-//       for (let i = 0; i < documents.length; i++) {
-//         Util.deleteFile(documents[i]);
-//       }
+exports.Registration = async (obj) => {
+  try {
+    const document = await getDocument(obj.studentId);
+    if (document) {
+      const documents = [
+        document.report,
+        document.journal,
+        document.transcript,
+      ];
+      for (let i = 0; i < documents.length; i++) {
+        Util.deleteFile(documents[i]);
+      }
 
-//       document.report = obj.report;
-//       document.journal = obj.journal;
-//       document.transcript = obj.transcript;
+      document.report = obj.report;
+      document.journal = obj.journal;
+      document.transcript = obj.transcript;
 
-//       await document.save();
-//       obj.response.json(document);
-//     }
-//     const newDocument = new Document({
-//       student: obj.studentId,
-//       report: obj.report,
-//       journal: obj.journal,
-//       transcript: obj.transcript,
-//     });
-//     const addedDocument = await newDocument.save();
-//     obj.response.json(addedDocument);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+      await document.save();
+      obj.response.json(document);
+    }
+    const newDocument = new Document({
+      student: obj.studentId,
+      report: obj.report,
+      journal: obj.journal,
+      transcript: obj.transcript,
+    });
+    const addedDocument = await newDocument.save();
+    obj.response.json(addedDocument);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const getProposal = async (studentId) => {
   try {
@@ -154,14 +154,14 @@ const getReport = async (studentId) => {
   }
 };
 
-// const getDocument = async (studentId) => {
-//   try {
-//     const document = await Document.findOne({ student: studentId });
-//     if (!document) {
-//       return null;
-//     }
-//     return document;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+const getDocument = async (studentId) => {
+  try {
+    const document = await Document.findOne({ student: studentId });
+    if (!document) {
+      return null;
+    }
+    return document;
+  } catch (error) {
+    console.log(error);
+  }
+};

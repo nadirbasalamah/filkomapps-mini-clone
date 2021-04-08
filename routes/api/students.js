@@ -2,6 +2,7 @@ const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
 const auth = require("../../middleware/auth");
+const uploadUtil = require("../../utils/upload");
 
 const StudentController = require("../../controllers/students");
 
@@ -12,6 +13,7 @@ router.post(
   "/proposal",
   [
     auth,
+    uploadUtil.getSingleUploadMiddleware(),
     check("title", "title is required").not().isEmpty(),
     check("background", "background is required").not().isEmpty(),
     check("research_question", "research question is required").not().isEmpty(),
@@ -31,6 +33,7 @@ router.post(
   "/report",
   [
     auth,
+    uploadUtil.getSingleUploadMiddleware(),
     check("title", "title is required").not().isEmpty(),
     check("abstract", "abstract is required").not().isEmpty(),
     check("background", "background is required").not().isEmpty(),
@@ -47,6 +50,11 @@ router.get("/report", auth, StudentController.GetReport);
 // @router  POST api/students/registration
 // @desc    Upload some documents for final assignment registration
 // @access  Private
-router.post("/registration", auth, StudentController.Registration);
+router.post(
+  "/registration",
+  auth,
+  uploadUtil.getUploadMiddleware(),
+  StudentController.Registration
+);
 
 module.exports = router;

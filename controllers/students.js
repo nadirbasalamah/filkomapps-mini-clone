@@ -124,29 +124,30 @@ exports.GetReport = async (req, res) => {
 
 exports.Registration = async (req, res) => {
   try {
-    // if (!req.file) {
-    //   const errResponse = {
-    //     response: res,
-    //     code: 422,
-    //     error: "File is required",
-    //   };
-    //   return Response.errorResponse(errResponse);
-    // }
+    const isValid =
+      req.files.report[0] && req.files.journal[0] && req.files.transcript[0];
 
-    // const reportUrl = req.file.path.replace("\\", "/");
-    // const journalUrl = req.file.path.replace("\\", "/");
-    // const transcriptUrl = req.file.path.replace("\\", "/");
+    if (!isValid) {
+      const errResponse = {
+        response: res,
+        code: 422,
+        error: "Files is required",
+      };
+      return Response.errorResponse(errResponse);
+    }
 
-    // const obj = {
-    //   studentId: req.user.id,
-    //   report: reportUrl,
-    //   journal: journalUrl,
-    //   transcript: transcriptUrl,
-    //   response: res,
-    // };
-    // await StudentService.Registration(obj);
+    const reportUrl = req.files.report[0].path.replace("\\", "/");
+    const journalUrl = req.files.journal[0].path.replace("\\", "/");
+    const transcriptUrl = req.files.transcript[0].path.replace("\\", "/");
 
-    res.send("registration not implemented yet.");
+    const obj = {
+      studentId: req.user.id,
+      report: reportUrl,
+      journal: journalUrl,
+      transcript: transcriptUrl,
+      response: res,
+    };
+    await StudentService.Registration(obj);
   } catch (error) {
     console.error(error.message);
     const serverErr = { response: res, code: 500, error: "server error" };
