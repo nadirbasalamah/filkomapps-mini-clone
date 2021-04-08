@@ -171,3 +171,43 @@ exports.LoginLecturer = async (obj) => {
     console.log(error);
   }
 };
+
+exports.ChangePassword = async (obj) => {
+  try {
+    if (obj.role === "student") {
+      const student = await Student.findById(obj.userId);
+      if (!student) {
+        const errResponse = {
+          response: obj.response,
+          code: 404,
+          error: { errors: [{ msg: "Student data not found" }] },
+        };
+        return Response.errorResponse(errResponse);
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      student.password = await bcrypt.hash(obj.password, salt);
+
+      await student.save();
+      obj.response.json(student);
+    } else if (obj.role === "lecturer") {
+      const lecturer = await Lecturer.findById(obj.userId);
+      if (!lecturer) {
+        const errResponse = {
+          response: obj.response,
+          code: 404,
+          error: { errors: [{ msg: "Lecturer data not found" }] },
+        };
+        return Response.errorResponse(errResponse);
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      lecturer.password = await bcrypt.hash(obj.password, salt);
+
+      await lecturer.save();
+      obj.response.json(lecturer);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

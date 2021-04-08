@@ -74,3 +74,35 @@ exports.Login = async (req, res) => {
     Response.serverErrResponse(errResponse);
   }
 };
+
+exports.ChangePassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errResponse = {
+      response: res,
+      code: 400,
+      error: { errors: errors.array() },
+    };
+    return Response.errorResponse(errResponse);
+  }
+
+  const { password, role } = req.body;
+
+  try {
+    const request = {
+      role,
+      password,
+      userId: req.user.id,
+      response: res,
+    };
+    await UserService.ChangePassword(request);
+  } catch (error) {
+    console.error(error.message);
+    const errResponse = {
+      response: res,
+      code: 500,
+      error: "server error",
+    };
+    Response.serverErrResponse(errResponse);
+  }
+};

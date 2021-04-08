@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 const router = express.Router();
 
 const UserController = require("../../controllers/users");
+const auth = require("../../middleware/auth");
 
 // @router  POST api/users/signup
 // @desc    Register a new user
@@ -33,6 +34,22 @@ router.post(
     check("password", "password is required").exists(),
   ],
   UserController.Login
+);
+
+// @router POST api/user/password
+// @desc Change password for user
+// @access Private
+router.post(
+  "/password",
+  [
+    auth,
+    check("role", "role is required").exists(),
+    check(
+      "password",
+      "please enter a password with 6 or more characters"
+    ).isLength({ min: 6 }),
+  ],
+  UserController.ChangePassword
 );
 
 module.exports = router;
